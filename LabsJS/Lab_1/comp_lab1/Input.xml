@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"?>
+<Parameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Parameter>
+    <Name>Name1</Name>
+    <Description>descr1</Description>
+    <Value>value1</Value>
+  </Parameter>
+  <Parameter>
+    <Name>Name2</Name>
+    <Description>descr2</Description>
+    <Value>value2</Value>
+  </Parameter>
+</Parameters>
