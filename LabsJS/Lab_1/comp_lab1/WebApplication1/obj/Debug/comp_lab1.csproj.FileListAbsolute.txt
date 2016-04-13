@@ -8,3 +8,8 @@ C:\Users\тр\Desktop\comp_lab1\comp_lab1\WebApplication1\bin\WebApplication1.pd
 C:\Users\тр\Desktop\comp_lab1\comp_lab1\WebApplication1\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\тр\Desktop\comp_lab1\comp_lab1\WebApplication1\obj\Debug\WebApplication1.dll
 C:\Users\тр\Desktop\comp_lab1\comp_lab1\WebApplication1\obj\Debug\WebApplication1.pdb
+C:\Users\тр\Desktop\Lab_1\comp_lab1\WebApplication1\bin\WebApplication1.dll
+C:\Users\тр\Desktop\Lab_1\comp_lab1\WebApplication1\bin\WebApplication1.pdb
+C:\Users\тр\Desktop\Lab_1\comp_lab1\WebApplication1\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\тр\Desktop\Lab_1\comp_lab1\WebApplication1\obj\Debug\WebApplication1.dll
+C:\Users\тр\Desktop\Lab_1\comp_lab1\WebApplication1\obj\Debug\WebApplication1.pdb
