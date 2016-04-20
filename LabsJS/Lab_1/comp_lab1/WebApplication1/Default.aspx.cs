@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Serialization;
 using System.ComponentModel;
+using System.Web.Handlers;
 
 namespace comp_lab1
 {
@@ -18,6 +19,11 @@ namespace comp_lab1
         {
             [XmlElement("Parameter")]
             public List<Parameter> parameters;
+
+            public Parameters()
+            {
+                parameters = new List<Parameter>();
+            }
         }
         public class Parameter
         {
@@ -34,7 +40,7 @@ namespace comp_lab1
             {
                 name = "";
                 description = "";
-                type = "";
+                type = "String";
                 value = "";
             }
 
@@ -67,13 +73,13 @@ namespace comp_lab1
             }
         }
 
-        public static List<Panel> list_panel;
+        public static Parameters data;
         protected void load_parameters_from_xml()
         {
-            if (list_panel == null)
-                list_panel = new List<Panel>();
-            if (list_panel.Count > 0)
-                list_panel.Clear();
+            if (data == null)
+                data = new Parameters();
+            if (data.parameters.Count > 0)
+                data.parameters.Clear();
 
             XmlSerializer serializer = new XmlSerializer(typeof(Parameters));
 
@@ -81,82 +87,8 @@ namespace comp_lab1
 
             XmlReader reader = XmlReader.Create(fs);
 
-            Parameters data;
             data = (Parameters)serializer.Deserialize(reader);
 
-            for (int i = 0; i < data.parameters.Count; i++)
-            {
-                Panel text_panel = new Panel();
-                text_panel.ID = string.Format("panel{0}", i);
-
-                TextBox parName = new TextBox();
-                parName.ID = string.Format("parName{0}", i);
-                parName.Text = data.parameters[i].Name;
-
-                TextBox parDescription = new TextBox();
-                parDescription.ID = string.Format("parDescription{0}", i);
-                parDescription.Text = data.parameters[i].Description;
-
-                text_panel.Controls.Add(parName);
-                text_panel.Controls.Add(parDescription);
-
-                DropDownList list = new DropDownList();
-                list.ID = string.Format("type{0}", i);
-                list.Items.Add("String");
-                list.Items.Add("Boolean");
-                list.Items.Add("Int32");
-
-                switch (data.parameters[i].Type)
-                {
-                    case "String":
-                        {
-                            list.SelectedIndex = 0;
-                            text_panel.Controls.Add(list);
-                            TextBox parValue = new TextBox();
-                            parValue.ID = string.Format("parValue{0}", i);
-                            parValue.Text = data.parameters[i].Value;
-                            text_panel.Controls.Add(parValue);
-                            break;
-                        }
-                    case "Boolean":
-                        {
-                            list.SelectedIndex = 1;
-                            text_panel.Controls.Add(list);
-                            CheckBox parValue = new CheckBox();
-                            parValue.ID = string.Format("parValue{0}", i);
-                            parValue.Checked = data.parameters[i].Value == "True";
-                            text_panel.Controls.Add(parValue);
-                            break;
-                        }
-                    case "Int32":
-                        {
-                            list.SelectedIndex = 2;
-                            text_panel.Controls.Add(list);
-                            TextBox parValue = new TextBox();
-                            parValue.ID = string.Format("parValue{0}", i);
-                            parValue.Text = data.parameters[i].Value;
-
-                            RegularExpressionValidator validator = new RegularExpressionValidator();
-                            validator.ID = string.Format("validator{0}", i);
-                            validator.ControlToValidate = parValue.ID;
-                            validator.ValidationExpression = "[0-9]";
-
-                            text_panel.Controls.Add(parValue);
-                            text_panel.Controls.Add(validator);
-                            break;
-                        }
-                    default:
-                        break;
-                }
-                Button delete = new Button();
-                delete.Text = "Удалить";
-                delete.ID = string.Format("button_delete{0}", i);
-
-                delete.Click += delete_Click;
-                text_panel.Controls.Add(delete);
-
-                list_panel.Add(text_panel);
-            }
             fs.Close();
         }
 
@@ -181,76 +113,158 @@ namespace comp_lab1
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (list_panel == null || list_panel.Count == 0)
+            if (!IsPostBack)
                 load_parameters_from_xml();
             load_controls_by_form(sender, e);
-            base.OnInit(e);
         }
 
         private void load_controls_by_form(object sender, EventArgs e)
         {
             panel.Controls.Clear();
-            for (int i = 0; i < list_panel.Count; i++)
+            Table table = new Table();
+            for (int i = 0; i < data.parameters.Count; i++)
             {
-                panel.Controls.Add(list_panel[i]);
+                TableRow row = new TableRow();
+
+                TextBox parName = new TextBox();
+                parName.ID = string.Format("parName{0}", i);
+                parName.Text = data.parameters[i].Name;
+
+                TextBox parDescription = new TextBox();
+                parDescription.ID = string.Format("parDescription{0}", i);
+                parDescription.Text = data.parameters[i].Description;
+
+                TableCell new_cell_name = new TableCell();
+                TableCell new_cell_description = new TableCell();
+
+                new_cell_name.Controls.Add(parName);
+                new_cell_description.Controls.Add(parDescription);
+
+                row.Cells.Add(new_cell_name);
+                row.Cells.Add(new_cell_description);
+
+                DropDownList list = new DropDownList();
+                list.ID = string.Format("type{0}", i);
+                list.Items.Add("String");
+                list.Items.Add("Boolean");
+                list.Items.Add("Int32");
+
+                TableCell new_cell_1 = new TableCell();
+                TableCell new_cell_2 = new TableCell();
+                Control parValue = new Control();
+                RegularExpressionValidator validator = new RegularExpressionValidator();
+                switch (data.parameters[i].Type)
+                {
+                    case "String":
+                        {
+                            list.SelectedIndex = 0;
+                            TextBox text_box = new TextBox();
+                            text_box.ID = string.Format("parValue{0}", i);
+                            text_box.Text = data.parameters[i].Value;
+                            parValue = text_box;
+                            break;
+                        }
+                    case "Boolean":
+                        {
+                            list.SelectedIndex = 1;
+                            CheckBox check_box = new CheckBox();
+                            check_box.ID = string.Format("parValue{0}", i);
+                            check_box.Checked = data.parameters[i].Value == "True";
+                            parValue = check_box;
+                            break;
+                        }
+                    case "Int32":
+                        {
+                            list.SelectedIndex = 2;
+                            TextBox text_box = new TextBox();
+                            text_box.ID = string.Format("parValue{0}", i);
+                            text_box.Text = data.parameters[i].Value;
+                            //text_box.TextChanged += new EventHandler(text_box_TextChanged);
+                            //text_box.AutoPostBack = true;
+
+                            validator.ID = string.Format("validator{0}", i);
+                            validator.ControlToValidate = string.Format("parValue{0}", i);
+                            validator.ValidationExpression = "^[0-9]";
+                            validator.ErrorMessage = "Symbol is not a number";
+                            validator.Display = ValidatorDisplay.Dynamic;
+
+                            parValue = text_box;
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                list.SelectedIndexChanged += new EventHandler(list_TextChanged);
+                list.AutoPostBack = true;
+
+                new_cell_1.Controls.Add(list);
+                row.Cells.Add(new_cell_1);
+                new_cell_2.Controls.Add(parValue);
+                row.Cells.Add(new_cell_2);
+
+                Button delete = new Button();
+                delete.Text = "Удалить";
+                delete.ID = string.Format("button_delete{0}", i);
+
+                delete.Click += new EventHandler(delete_Click);
+                TableCell new_cell = new TableCell();
+                new_cell.Controls.Add(delete);
+                row.Cells.Add(new_cell);
+
+                TableCell new_cell_validator = new TableCell();
+                if (data.parameters[i].Type == "Int32")
+                {
+                    new_cell_validator.Controls.Add(validator);
+                    row.Cells.Add(new_cell_validator);
+                }
+
+                table.Rows.Add(row);
+
+                panel.Controls.Add(table);
             }
             add_buttons();
         }
 
-        private void button_add_Click(object sender, EventArgs e)
+        void text_box_TextChanged(object sender, EventArgs e)
         {
-            int index = list_panel.Count + 1;
-
-            Panel new_parameter = new Panel();
-            new_parameter.ID = string.Format("panel{0}", index);
-
-            TextBox parName = new TextBox();
-            parName.ID = string.Format("parName{0}", index);
-
-            TextBox parDescription = new TextBox();
-            parDescription.ID = string.Format("parDescription{0}", index);
-
-            DropDownList list = new DropDownList();
-            list.ID = string.Format("type{0}", index);
-            list.Items.Add("String");
-            list.Items.Add("Boolean");
-            list.Items.Add("Int32");
-
-            TextBox parValue = new TextBox();
-            parValue.ID = string.Format("parValue{0}", index);
-
-            Button delete = new Button();
-            delete.Text = "Удалить";
-            delete.ID = string.Format("button_delete{0}", index);
-
-            delete.Click += delete_Click;
-
-            new_parameter.Controls.Add(parName);
-            new_parameter.Controls.Add(parDescription);
-            new_parameter.Controls.Add(list);
-            new_parameter.Controls.Add(parValue);
-
-            new_parameter.Controls.Add(delete);
-
-            list_panel.Add(new_parameter);
+            read_from_form();
+            TextBox text_box;
+            text_box = (TextBox)sender;
+            int value;
+            if (!int.TryParse(text_box.Text, out value))
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", "Symbol is not a number");
         }
 
-        private void button_save_Click(object sender, EventArgs e)
+        private void list_TextChanged(object sender, EventArgs e)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Parameters));
-            TextWriter writer = new StreamWriter("Input.xml");
+            read_from_form();
+            DropDownList list;
+            list = (DropDownList)sender;
+            data.parameters[int.Parse(list.ID.Replace("type", ""))].Type = list.SelectedValue;
+            base.OnLoad(e);
+        }
 
-            Parameters data = new Parameters();
-            data.parameters = new List<Parameter>();
-            for (int i = 0; i < list_panel.Count; i++)
+        private void button_add_Click(object sender, EventArgs e)
+        {
+            read_from_form();
+            Parameter new_parameter = new Parameter();
+            data.parameters.Add(new_parameter);
+            base.OnLoad(e);
+        }
+
+        private void read_from_form()
+        {
+            data.parameters.Clear();
+            Table table = (Table)panel.Controls[0];
+            for (int i = 0; i < table.Rows.Count; i++)
             {
                 Parameter parametr = new Parameter();
-                for (int j = 0; j < list_panel[i].Controls.Count; j++)
+                for (int j = 0; j < table.Rows[i].Cells.Count; j++)
                 {
-                    Type type_ = list_panel[i].Controls[j].GetType();
+                    Type type_ = table.Rows[i].Cells[j].Controls[0].GetType();
                     if (type_ == typeof(TextBox))
                     {
-                        TextBox t = (TextBox)(list_panel[i].Controls[j]);
+                        TextBox t = (TextBox)(table.Rows[i].Cells[j].Controls[0]);
                         if (t.ID.Contains("parName"))
                         {
                             parametr.Name = t.Text;
@@ -270,28 +284,35 @@ namespace comp_lab1
                     }
                     if (type_ == typeof(DropDownList))
                     {
-                        DropDownList t = (DropDownList)(list_panel[i].Controls[j]);
+                        DropDownList t = (DropDownList)(table.Rows[i].Cells[j].Controls[0]);
                         parametr.Type = t.SelectedValue;
                     }
                     if (type_ == typeof(CheckBox))
                     {
-                        CheckBox t = (CheckBox)(list_panel[i].Controls[j]);
+                        CheckBox t = (CheckBox)(table.Rows[i].Cells[j].Controls[0]);
                         parametr.Value = t.Checked.ToString();
                     }
                 }
                 data.parameters.Add(parametr);
             }
+        }
+
+        private void button_save_Click(object sender, EventArgs e)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Parameters));
+            TextWriter writer = new StreamWriter("Output.xml");
+            read_from_form();
             serializer.Serialize(writer, data);
             writer.Close();
         }
 
         private void delete_Click(object sender, EventArgs e)
         {
+            read_from_form();
+            Button b;
+            b = (Button)sender;
+            data.parameters.RemoveAt(int.Parse(b.ID.Replace("button_delete", "")));
+            base.OnLoad(e);
         }
-
-        //protected void Page_Closed(object sender, EventArgs e)
-        //{
-        //    list_panel.Clear();
-        //}
     }
 }
