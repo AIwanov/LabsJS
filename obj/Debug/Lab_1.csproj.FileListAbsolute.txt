@@ -3,3 +3,9 @@ C:\Users\тр\Documents\Visual Studio 2008\Projects\Lab_1\bin\Lab_1.pdb
 C:\Users\тр\Documents\Visual Studio 2008\Projects\Lab_1\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\тр\Documents\Visual Studio 2008\Projects\Lab_1\obj\Debug\Lab_1.dll
 C:\Users\тр\Documents\Visual Studio 2008\Projects\Lab_1\obj\Debug\Lab_1.pdb
+C:\Users\тр\Documents\GitHub\LabJS\bin\Lab_1.dll.config
+C:\Users\тр\Documents\GitHub\LabJS\bin\Lab_1.dll
+C:\Users\тр\Documents\GitHub\LabJS\bin\Lab_1.pdb
+C:\Users\тр\Documents\GitHub\LabJS\obj\Debug\Lab_1.csprojResolveAssemblyReference.cache
+C:\Users\тр\Documents\GitHub\LabJS\obj\Debug\Lab_1.dll
+C:\Users\тр\Documents\GitHub\LabJS\obj\Debug\Lab_1.pdb
