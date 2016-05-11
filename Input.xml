@@ -13,7 +13,7 @@
     <Value>-5</Value>
   </Parameter>
   <Parameter>
-    <Name />
+    <Name>bool</Name>
     <Description />
     <Type>Boolean</Type>
     <Value>True</Value>

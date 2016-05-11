@@ -156,6 +156,9 @@ namespace comp_lab1
                             TextBox text_box = new TextBox();
                             text_box.ID = string.Format("parValue{0}", i);
                             text_box.Text = data.parameters[i].Value;
+                            text_box.Attributes.Add("onkeydown", "onKeyDownString(this)");
+                            text_box.Attributes.Add("runat", "server")
+                                ;
                             parValue = text_box;
                             break;
                         }
@@ -177,7 +180,10 @@ namespace comp_lab1
                             text_box.ID = string.Format("parValue{0}", i);
                             int value;
                             text_box.Text = int.TryParse(data.parameters[i].Value, out value) ? data.parameters[i].Value : "";
-                            text_box.Attributes.Add("onkeydown", "onKeyUp(this)");
+                            text_box.Attributes.Add("onkeydown", "onKeyDownNum(this)");
+                            text_box.Attributes.Add("onpast", "onPast(this)");
+                            text_box.Attributes.Add("data-oldValue", text_box.Text);
+                            text_box.Attributes.Add("data-cursor", "");
                             text_box.Attributes.Add("runat", "server");
 
                             parValue = text_box;
