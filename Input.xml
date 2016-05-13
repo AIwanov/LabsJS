@@ -7,13 +7,13 @@
     <Value>value1</Value>
   </Parameter>
   <Parameter>
-    <Name>Name8</Name>
-    <Description>descr4</Description>
+    <Name>Name2</Name>
+    <Description>descr2</Description>
     <Type>Int32</Type>
     <Value>-5</Value>
   </Parameter>
   <Parameter>
-    <Name>bool</Name>
+    <Name>Name3</Name>
     <Description />
     <Type>Boolean</Type>
     <Value>True</Value>

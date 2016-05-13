@@ -14,7 +14,8 @@
 </body>
 </html>
 <script type='text/javascript'>
-    function onKeyDownNum(field) {
+    function onKeyDownNum(event, field) {
+        var cursor = event.target.selectionStart
         function handle() {
             var old_value = field.getAttribute("data-oldValue")
             if (old_value != field.value) {
@@ -30,31 +31,41 @@
                         str_value = int_value.toString();
                     }
                     catch (e) {
-                        str_value = old_value
-                        field.selectionStart = field.getAttribute("data-cursor")
+                        field.value = old_value;
+                        field.selectionStart = cursor
+                        field.selectionEnd = cursor
+                        return
                     }
                 }
-                field.setAttribute("data-oldValue", str_value)
                 field.value = str_value;
+                if (str_value != "-")
+                    field.setAttribute("data-oldValue", str_value)
             }
         }
         setTimeout(handle, 0);
     }
 
     function onKeyDownString(field) {
+        var cursor = event.target.selectionStart
+        var old_value = field.value
         function handle() {
             var str_value = field.value;
             if (str_value.length > 10) {
-                field.value = field.value.substring(0, 10);
-                onKeyDownString(field)
+                field.value = old_value;
+                field.selectionStart = cursor
+                field.selectionEnd = cursor
             }
         }
         setTimeout(handle, 0);
     }
-    function onPast(field) {
-        field.focus()
-        field.setAttribute("data-oldValue", field.value)
-        field.setAttribute("data-cursor", field.getSelection().toString())
+
+    function onBlurEvent(event, field) {
+        function handle() {
+            if (field.value.length == 1 && field.value == "-") {
+                field.value = field.getAttribute("data-oldValue");
+            }
+        }
+        setTimeout(handle, 0);
     }
 </script>
 
